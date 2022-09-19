@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    
+    <title>BFS算法框架 | Hao Wu&#39;s Homepage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1.13.0.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+    </script>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-avatar avatar avatar-sm">
+                <img src="/images/waley.jpg" alt="Hao Wu">
+            </div>
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">Hao Wu&#39;s Homepage</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">Home</a>
+                
+                <a href="/Project.html">Project</a>
+                
+                <a href="/About.html">About</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">Home</a>
+                    
+                    <a href="/Project.html">Project</a>
+                    
+                    <a href="/About.html">About</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cl890tlp1000pwctdg5wn75ak" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      BFS算法框架
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2021-09-19T14:05:47.000Z" itemprop="datePublished">2021-09-19</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/LeetCode/">LeetCode</a>
+            </div>
+            
+
+            
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithms/" rel="tag">Algorithms</a></li></ul>
+            </div>
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <p><strong>DFS</strong>算法就是回溯算法。</p>
+<p><strong>BFS</strong>的核心思想：把一些问题抽象成图，从一个点开始，向四周扩散。一般来说，BFS算法都是用「队列」这种数据结构，每次将一个节点周围的所有的节点加入队列。</p>
+<h1 id="算法框架"><a href="#算法框架" class="headerlink" title="算法框架"></a>算法框架</h1><p><strong>BFS</strong>本质就是在一幅「图」中找到起点 <code>start</code> 到终点 <code>target</code> 的最近距离。</p>
+<blockquote>
+<p>从广义上描述可以有各种变体，比如：<br>    - 走迷宫，有的格子是围墙不能走，从起点到终点的最短距离是多少？如果这个迷宫带「传送门」可以瞬间传送呢？<br>    - 两个单词，要求你通过某些替换，把其中一个变成另外一个，每次只能替换一个字符，最少要替换几次？</p>
+</blockquote>
+<h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><pre><code class="java">// 计算从起点 start 到终点 target 的最近距离 
+int BFS(Node start, Node target) 
+&#123;
+    Queue&lt;Node&gt; q; // 核心数据结构 
+    Set&lt;Node&gt; visited; // 避免走回头路
+
+    q.offer(start); // 将起点加入队列 
+    visited.add(start);
+    int step = 0; // 记录扩散的步数
+
+    while (q not empty) 
+    &#123;
+        int sz = q.size();
+        /* 将当前队列中的所有节点向四周扩散 */ 
+        for (int i = 0; i &lt; sz; i++) 
+        &#123;
+            Node cur = q.poll();
+            /* 划重点:这里判断是否到达终点 */
+            if (cur is target)
+                return step;
+            /* 将 cur 的相邻节点加入队列 */ 
+            for (Node x : cur.adj())
+                if (x not in visited) 
+                &#123;
+                    q.offer(x);
+                    visited.add(x);
+                &#125;
+        &#125;
+
+        /* 划重点:更新步数在这里 */
+        step++; 
+
+    &#125;
+&#125;</code></pre>
+<p><code>cur.adj()</code> 泛指 <code>cur</code> 相邻节点。比如二维数组中，<code>cur</code> 上下左右四面的位置就是相邻节点；<br><code>visited</code> 的主要作用是防止走回头路，大部分时候都是必须的，但是像一般的二叉树结构，没有子节点到父节点的指针，不会走回头路就不需要 <code>visited</code>。</p>
+<h1 id="二叉树的最小高度"><a href="#二叉树的最小高度" class="headerlink" title="二叉树的最小高度"></a>二叉树的最小高度</h1><p>一个简单的问题实践一下BFS框架。判断一颗二叉树的<strong>最小</strong>高度。</p>
+<h2 id="LeetCode-111-二叉树的最小深度"><a href="#LeetCode-111-二叉树的最小深度" class="headerlink" title="LeetCode 111 - 二叉树的最小深度"></a>LeetCode 111 - 二叉树的最小深度</h2><p>给定一个二叉树，找出其最小深度。<br>最小深度是从根节点到最近叶子节点的最短路径上的节点数量。<br><strong>说明</strong>：叶子节点是指没有子节点的节点。</p>
+<img src="/images/ex_depth.jpg">
+
+<blockquote>
+<p>输入：root = [3,9,20,null,null,15,7]<br>    输出：2</p>
+</blockquote>
+<p>示例 2：</p>
+<blockquote>
+<p>输入：root = [2,null,3,null,4,null,5,null,6]<br>    输出：5</p>
+</blockquote>
+<p>提示：</p>
+<ul>
+<li>树中节点数的范围在 [0, 105] 内</li>
+<li>-1000 &lt;= Node.val &lt;= 1000</li>
+</ul>
+<p>来源：力扣（LeetCode）<br>链接：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/intersection-of-two-arrays">https://leetcode-cn.com/problems/intersection-of-two-arrays</a></p>
+<a id="more"></a>
+
+<p>首先明确一下起点 <code>start</code> 和 终点 <code>target</code> 是什么，怎么判断达到了终点？<br><strong>起点就是 <code>root</code> 根节点，终点就是最靠近根节点的那个「叶子结点」，叶子结点就是两个子节点都是 <code>null</code> 的节点。</strong></p>
+<pre><code class="java">//到达叶子节点
+if (cur.left == null &amp;&amp; cur.right == null)</code></pre>
+<p>按照结构改造：</p>
+<h3 id="java"><a href="#java" class="headerlink" title="java"></a>java</h3><pre><code class="java">class Solution &#123;
+    public int minDepth(TreeNode root)&#123;
+
+        if (root == null) return 0;
+        Queue&lt;TreeNode&gt; q = new LinkedList&lt;&gt;();
+        q.offer(root);
+
+        //root本身就是一层，depth初始化为1
+        int depth = 1;
+
+        while(!q.isEmpty())&#123;
+
+            int sz=q.size();
+
+            //将当前队列中的所有节点向四周扩散
+            for (int i=0; i&lt;sz; i++)&#123;
+
+            TreeNode cur=q.poll();
+
+            //判断是够达到终点
+            if (cur.left == null &amp;&amp; cur.right == null)
+                return depth;
+
+            //将cur的相邻节点加入队列
+            if (cur.left != null)
+                q.offer(cur.left);
+            if (cur.right != null)
+                q.offer(cur.right);
+            &#125;
+
+            //增加步数
+            depth++;
+        &#125;
+
+        return depth;
+    &#125;
+&#125;</code></pre>
+<h3 id="C"><a href="#C" class="headerlink" title="C"></a>C</h3><pre><code class="C">int minDepth(struct TreeNode* root)
+&#123;
+    struct TreeNode* que[5000];
+    struct TreeNode* temp;
+    if(!root)
+        return 0;
+    int head=0,tail=0,step=0,i=0,size;
+    que[tail++]=root;
+    while(head&lt;tail)
+    &#123;
+        size=tail-head;
+        step++;
+        for(i=0;i&lt;size;i++)
+        &#123;
+            temp=que[head++];
+            if(!temp-&gt;left&amp;&amp;!temp-&gt;right)
+            return step;
+            if(temp-&gt;left)
+            que[tail++]=temp-&gt;left;
+            if(temp-&gt;right)
+            que[tail++]=temp-&gt;right;
+        &#125;
+    &#125;
+    return step;
+&#125;</code></pre>
+<h2 id="为什么BFS可以找到最短距离，DFS不可以吗？"><a href="#为什么BFS可以找到最短距离，DFS不可以吗？" class="headerlink" title="为什么BFS可以找到最短距离，DFS不可以吗？"></a>为什么BFS可以找到最短距离，DFS不可以吗？</h2><p>BFS的逻辑：<code>depth</code> 每增加一次，队列中的所有节点都向前迈一步，这保证了第一次到达终点的时候，走的步数是最少的。<br>DFS也可以找最短路径，但时间复杂度相对高很多。DFS要把二叉树中的所有树杈都探索完才能对比出最短的路径。</p>
+<h2 id="既然BFS这么好，为什么DFS还要存在？"><a href="#既然BFS这么好，为什么DFS还要存在？" class="headerlink" title="既然BFS这么好，为什么DFS还要存在？"></a>既然BFS这么好，为什么DFS还要存在？</h2><p>BFS可以找到最短距离，但空间复杂度较高，而DFS的空间复杂度较低。</p>
+<p>以上面处理二叉树为例子，假设这个二叉树是满二叉树，节点数为 <code>N</code>，对于DFS算法来说，空间复杂度就是递归堆栈，最坏的情况下就是树的高度 <code>o(logN)</code>。对于BFS算法，队列中每次都会存储这二叉树一层的节点，这样最坏的情况下空间复杂度应该是树的最底层节点的数量，也就是 <code>N/2</code>，用Big O表示的话就是 <code>O(N)</code>。</p>
+<h2 id="LeetCode-752-解开密码锁的最少次数"><a href="#LeetCode-752-解开密码锁的最少次数" class="headerlink" title="LeetCode 752 - 解开密码锁的最少次数"></a>LeetCode 752 - 解开密码锁的最少次数</h2><p>你有一个带有四个圆形拨轮的转盘锁。每个拨轮都有10个数字： <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>, <code>7</code>, <code>8</code>, <code>9</code> 。每个拨轮可以自由旋转：例如把 <code>9</code> 变为 <code>0</code>，<code>0</code> 变为 <code>9</code> 。每次旋转都只能旋转一个拨轮的一位数字。</p>
+<p>锁的初始数字为 <code>0000</code> ，一个代表四个拨轮的数字的字符串。<br>列表 deadends 包含了一组死亡数字，一旦拨轮的数字和列表里的任何一个元素相同，这个锁将会被永久锁定，无法再被旋转。<br>字符串 target 代表可以解锁的数字，你需要给出解锁需要的最小旋转次数，如果无论如何不能解锁，返回 -1 。</p>
+<p><strong>示例 1:</strong></p>
+<blockquote>
+<p>输入：deadends = [“0201”,”0101”,”0102”,”1212”,”2002”], target = “0202”<br>    输出：6<br>    解释：<br>    可能的移动序列为 “0000” -&gt; “1000” -&gt; “1100” -&gt; “1200” -&gt; “1201” -&gt; “1202” -&gt; “0202”。<br>    注意 “0000” -&gt; “0001” -&gt; “0002” -&gt; “0102” -&gt; “0202” 这样的序列是不能解锁的，<br>    因为当拨动到 “0102” 时这个锁就会被锁定。</p>
+</blockquote>
+<p><strong>示例 2:</strong></p>
+<blockquote>
+<p>输入: deadends = [“8888”], target = “0009”<br>    输出：1<br>    解释：<br>    把最后一位反向旋转一次即可 “0000” -&gt; “0009”。</p>
+</blockquote>
+<p><strong>示例 3:</strong></p>
+<blockquote>
+<p>输入: deadends = [“8887”,”8889”,”8878”,”8898”,”8788”,”8988”,”7888”,”9888”], target = “8888”<br>    输出：-1<br>    解释：<br>    无法旋转到目标数字且不被锁定。</p>
+</blockquote>
+<p><strong>示例 4:</strong></p>
+<blockquote>
+<p>输入: deadends = [“0000”], target = “8888”<br>    输出：-1</p>
+</blockquote>
+<p>提示：</p>
+<ul>
+<li>1 &lt;= deadends.length &lt;= 500</li>
+<li>deadends[i].length == 4</li>
+<li>target.length == 4</li>
+<li>target 不在 deadends 之中</li>
+<li>target 和 deadends[i] 仅由若干位数字组成</li>
+</ul>
+<p>来源：力扣（LeetCode）<br>链接：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/open-the-lock">https://leetcode-cn.com/problems/open-the-lock</a></p>
+<p><strong>第一步，不管所有的限制条件，不管 <code>deadends</code> 和 <code>target</code> 的限制，设计一个算法穷举所有可能的密码组合。</strong><br>穷举。如果只转一次，每个位置都可以向上向下转，一共有4个位置，总共有8种可能。</p>
+<p>比如以<code>0000</code>为基础，可以穷举出：</p>
+<blockquote>
+<p>1000<br> 9000<br> 0100<br> 0900<br> 0010<br> 0090<br> 0001<br> 0009</p>
+</blockquote>
+<p>然后再以这8种为基础，穷举出所有的可能性。</p>
+<p>可以把这个问题抽象成 <code>图</code>，每个节点有8个相邻的节点。求最短距离，这就是BFS。</p>
+<p>先写出一个「简陋」的BFS框架</p>
+<pre><code class="java">//s[j]向上拨动一次
+String plusOne(string s, int j)&#123;
+    char[] ch = s.toCharArray();
+    if (ch[j] == &#39;9&#39;)
+        ch[j] == &#39;0&#39;;
+    else 
+        ch[j] += 1;
+
+    return new String(ch);
+&#125;
+
+//s[j]向下拨动一次
+String minusOne(string s, int j)&#123;
+    char[] ch = s.toCharArray();
+    if (ch[j] == &#39;0&#39;)
+        ch[j] == &#39;9&#39;;
+    else 
+        ch[j] -= 1;
+
+    return new String(ch);
+&#125;
+
+//BFS框架，打印所有可能的密码
+void BFS(String target)&#123;
+    Queue&lt;String&gt; q = new LinkedList&lt;&gt;();
+    q.offer(&quot;0000&quot;);
+
+    while(!q.isEmpty())&#123;
+        int sz = q.size();
+
+        //将队列中的所有节点向周围扩散
+        for (int i = 0; i &lt; sz; i++)&#123;
+            Stirng cur = q.poll;
+            //判断是否到达终点
+            System.out.println(cur);
+
+            //将一个节点的相邻节点加入队列
+            for (int j = 0; j &lt; 4; j++)&#123;
+                String up = plusOne(cur,j);
+                String down = minusOne(cur,j);
+                q.offer(up);
+                q.offer(down);
+            &#125;
+        &#125;
+    //增加步数
+    &#125;
+    return;
+&#125;</code></pre>
+<p>上面的框架已经能够穷举所有可能的密码组合，但依旧不能完成所有的题目要求，需要解决的问题有：</p>
+<blockquote>
+<ol>
+<li>重复。比如从 <code>0000</code> 拨到 <code>1000</code>，但是等从队列中拿出 <code>1000</code> 时，还会拨出一个 <code>0000</code>，会产生一个死循环。</li>
+<li>缺少终止条件。按照题目要求，找到 <code>target</code> 就应该结束并返回拨动次数。</li>
+<li>缺少对 <code>deadends</code> 的处理。按照题目要求，<code>deadends</code> 是不能出现的，遇到这些密码的时候要跳过。</li>
+</ol>
+</blockquote>
+<p>针对上述问题，对已经给出的BFS代码进行修改。</p>
+<pre><code class="java">class Solution &#123;
+    //s[j]向上拨动一次
+    String plusOne(String s, int j)&#123;
+        char[] ch = s.toCharArray();
+        if (ch[j] == &#39;9&#39;)
+            ch[j] = &#39;0&#39;;
+        else 
+            ch[j] += 1;
+
+        return new String(ch);
+    &#125;
+
+    //s[j]向下拨动一次
+    String minusOne(String s, int j)&#123;
+        char[] ch = s.toCharArray();
+        if (ch[j] == &#39;0&#39;)
+            ch[j] = &#39;9&#39;;
+        else 
+            ch[j] -= 1;
+
+        return new String(ch);
+    &#125;
+    public int openLock(String[] deadends, String target)&#123;
+    //记录需要跳过的deadends
+    Set&lt;String&gt; deads = new HashSet&lt;&gt;();
+    for (String s : deadends) deads.add(s);
+
+    //记录已经穷举过的密码
+    Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+    Queue&lt;String&gt; q = new LinkedList&lt;&gt;();
+
+    //从起点开始使用广度优先搜索
+    int step = 0;
+    q.offer(&quot;0000&quot;);
+    visited.add(&quot;0000&quot;);
+
+        while (!q.isEmpty())&#123;
+            int sz = q.size();
+
+            //将当前队列中的所有节点向周围扩散
+            for (int i = 0; i &lt; sz; i++)&#123;
+                String cur = q.poll();
+
+                //判断是否到达终点
+                if (deads.contains(cur))
+                    continue;
+                if (cur.equals(target))
+                    return step;
+
+                //将一个节点的未遍历相邻节点加入队列
+                for (int j = 0; j &lt; 4; j++)&#123;
+                    String up = plusOne(cur, j);
+                    if (!visited.contains(up))&#123;
+                        q.offer(up);
+                        visited.add(up);
+                    &#125;
+
+                    String down = minusOne(cur,j);
+                    if (!visited.contains(down))&#123;
+                        q.offer(down);
+                        visited.add(down);
+                    &#125;
+
+                &#125;
+            &#125;
+            step++;
+        &#125;
+        return -1;
+    &#125;
+
+&#125;</code></pre>
+<h2 id="双向BFS优化"><a href="#双向BFS优化" class="headerlink" title="双向BFS优化"></a>双向BFS优化</h2><p>传统的BFS框架是从起点开始向四周扩散，遇到终点时停止；而双向BFS则是从起点和终点同时开始扩散，当两边有交集的时候停止。</p>
+<p>传统BFS与双向BFS的最坏复杂度都是 <code>O(N)</code>, 但实际上双向BFS会更快一些。<br><img src="/images/traditional BFS.jpeg"><br><img src="/images/BiDir BFS.jpeg"><br>以上图的树形结构为例，如果终点都在底部，按照传统BFS算法，需要把整颗树的节点都遍历一遍，最后找到 <code>target</code>；而双向BFS只遍历了半颗树就找到了最短距离。</p>
+<p>BFS也有局限性：必须知道终点在哪。比如上面的二叉树的最小高度问题，一开始不知道终点在哪，也就无法使用双向BFS。但密码锁问题，可以使用双向BFS算法来提高效率。</p>
+<pre><code class="java">class Solution &#123;
+    //s[j]向上拨动一次
+    String plusOne(String s, int j)&#123;
+        char[] ch = s.toCharArray();
+        if (ch[j] == &#39;9&#39;)
+            ch[j] = &#39;0&#39;;
+        else 
+            ch[j] += 1;
+
+        return new String(ch);
+    &#125;
+
+    //s[j]向下拨动一次
+    String minusOne(String s, int j)&#123;
+        char[] ch = s.toCharArray();
+        if (ch[j] == &#39;0&#39;)
+            ch[j] = &#39;9&#39;;
+        else 
+            ch[j] -= 1;
+
+        return new String(ch);
+    &#125;
+    public int openLock(String[] deadends, String target)&#123;
+    //记录需要跳过的deadends
+    Set&lt;String&gt; deads = new HashSet&lt;&gt;();
+    for (String s : deadends) deads.add(s);
+
+    //用集合不用队列，可以快速判断元素是否存在
+    Set&lt;String&gt; q1 = new HashSet&lt;&gt;();
+    Set&lt;String&gt; q2 = new HashSet&lt;&gt;();
+    Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+
+    //从起点开始使用广度优先搜索
+    int step = 0;
+    q1.add(&quot;0000&quot;);
+    q2.add(target);
+
+        while (!q1.isEmpty() &amp;&amp; !q2.isEmpty())&#123;
+            //哈希集合在遍历过程中不能修改，用temp存粗扩散结果
+            Set&lt;String&gt; temp = new HashSet&lt;&gt;();
+
+            //将q1中的所有节点向周围扩散
+            for (String cur : q1)&#123;
+                //是否达到终点
+                if (deads.contains(cur))
+                    continue;
+                if (q2.contains(cur))
+                    return step;
+
+                visited.add(cur);
+
+
+                //将一个节点的未遍历相邻节点加入队列
+                for (int j = 0; j &lt; 4; j++)&#123;
+                    String up = plusOne(cur, j);
+                    if (!visited.contains(up))
+                        temp.add(up);
+
+                    String down = minusOne(cur,j);
+                    if (!visited.contains(down))
+                        temp.add(down);
+                &#125;
+            &#125;
+        //增加步数
+        step++;
+        //交换q1 q2，下一轮while就是扩散q2
+        q1 = q2;
+        q2 = temp;
+        &#125;
+        return -1;
+    &#125;
+
+&#125;</code></pre>
+<p>双向BFS还是符合BFS算法框架的，只是<strong>不再使用队列，而是使用HashSet快速判断两个集合是否有交集</strong>。<br>**while循环最后交换 <code>q1</code> 和 <code>q2</code>**，只要默认扩散 <code>q1</code> 就相当于轮流扩散 <code>q1</code> 和 <code>q2</code>。</p>
+<p>BFS还有另外一个优化：在while循环开始时做一个判断：</p>
+<pre><code class="java">...
+        while (!q1.isEmpty() &amp;&amp; !q2.isEmpty())&#123;
+            if (q1.size() &gt; q2.size())&#123;
+                //交换q1 q2
+                temp = q1;
+                q1 = q2;
+                q2 = temp;
+            &#125;
+...            
+        &#125;</code></pre>
+<p>按照BFS框架，队列（集合）中的元素越多，扩散之后新的队列（集合）中的元素就越多；在双向BFS算法中，如果每一次都选择一个较小的集合进行扩散，那么占用的空间增长速度就会慢一些，效率就会高一些。</p>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+    <a href="/introduction/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          介绍段写法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/Positive%20or%20negative%20Response1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">Positive or Negative写法 1</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=BFS算法框架 - Hao Wu's Homepage&url=https://waley.tech/BFS%20Algorithm%20Structure/">
+            <box-icon type='logo' name='twitter'></box-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=BFS算法框架 - Hao Wu's Homepage&u=https://waley.tech/BFS%20Algorithm%20Structure/">
+            <box-icon name='facebook-square' type='logo' ></box-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=BFS算法框架 - Hao Wu's Homepage&url=https://waley.tech/BFS%20Algorithm%20Structure/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+             
+            <aside class="sidebar">
+            
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Evolutionary-Computation/">Evolutionary Computation</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/IELTS/">IELTS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode/">LeetCode</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-tags">
+    <div class="widget-title"><span>Tags</span></div>
+    <div class="widget-inner">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithms/" rel="tag">Algorithms</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CC/" rel="tag">CC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GRA/" rel="tag">GRA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guide/" rel="tag">Guide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Research-Proposal/" rel="tag">Research Proposal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TR/" rel="tag">TR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Writing-Classifying/" rel="tag">Writing Classifying</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            Hao Wu&#39;s Homepage &copy; 2022<br>
+            Powered By Hexo · Theme By <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a>
+        </div>
+    </div>
+
+</footer>
+
+
+
+
+<script src="/dist/build.js?1.13.0.js"></script>
+
+
+<script src="/dist/custom.js?1.13.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

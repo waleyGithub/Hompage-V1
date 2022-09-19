@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    
+    <title>FlappyBird | Hao Wu&#39;s Homepage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    
+
+    
+
+    
+
+    
+
+    
+<link rel="stylesheet" href="/dist/build.css?v=1.13.0.css">
+
+
+    <script>
+        window.isPost = true
+        window.aomori = {
+            
+        }
+        window.aomori_logo_typed_animated = false
+        window.aomori_search_algolia = false
+    </script>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+
+    <div class="container">
+    <header class="header">
+        <div class="header-type">
+            
+            <div class="header-type-avatar avatar avatar-sm">
+                <img src="/images/waley.jpg" alt="Hao Wu">
+            </div>
+            
+            <div class="header-type-inner">
+                
+                    <a class="header-type-title" href="/">Hao Wu&#39;s Homepage</a>
+                
+    
+                
+            </div>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-inner">
+                
+                <a href="/">Home</a>
+                
+                <a href="/Project.html">Project</a>
+                
+                <a href="/About.html">About</a>
+                
+            </div>
+            <div class="header-menu-social">
+                
+            </div>
+        </div>
+
+        <div class="header-menu-mobile">
+            <div class="header-menu-mobile-inner" id="mobile-menu-open">
+                <i class="icon icon-menu"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="header-menu-mobile-menu">
+        <div class="header-menu-mobile-menu-bg"></div>
+        <div class="header-menu-mobile-menu-wrap">
+            <div class="header-menu-mobile-menu-inner">
+                <div class="header-menu-mobile-menu-close" id="mobile-menu-close">
+                    <i class="icon icon-cross"></i>
+                </div>
+                <div class="header-menu-mobile-menu-list">
+                    
+                    <a href="/">Home</a>
+                    
+                    <a href="/Project.html">Project</a>
+                    
+                    <a href="/About.html">About</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <div class="container">
+        <div class="main">
+            <section class="inner">
+                <section class="inner-main">
+                    <div class="post">
+    <article id="post-cl890tlp2000swctdfomua1ls" class="article article-type-post" itemscope
+    itemprop="blogPost">
+
+    <div class="article-inner">
+
+        
+          
+        
+        
+        
+
+        
+        <header class="article-header">
+            
+  
+    <h1 class="article-title" itemprop="name">
+      FlappyBird
+    </h1>
+  
+
+        </header>
+        
+
+        <div class="article-more-info article-more-info-post hairline">
+
+            <div class="article-date">
+  <time datetime="2021-12-05T13:23:47.000Z" itemprop="datePublished">2021-12-05</time>
+</div>
+
+            
+            <div class="article-category">
+                <a class="article-category-link" href="/categories/Evolutionary-Computation/">Evolutionary Computation</a>
+            </div>
+            
+
+            
+            <div class="article-tag">
+                <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithms/" rel="tag">Algorithms</a></li></ul>
+            </div>
+            
+
+            
+
+        </div>
+
+        <div class="article-entry post-inner-html hairline" itemprop="articleBody">
+            <h1 id="使用MLP与遗传算法玩FlappyBird-GitHub链接"><a href="#使用MLP与遗传算法玩FlappyBird-GitHub链接" class="headerlink" title="使用MLP与遗传算法玩FlappyBird GitHub链接"></a><strong>使用MLP与遗传算法玩FlappyBird</strong> <a target="_blank" rel="noopener" href="https://github.com/waleyCode/FlappyBird">GitHub链接</a></h1><img src="/images/flappyBird.jpg">
+
+
+
+<h2 id="所需环境"><a href="#所需环境" class="headerlink" title="所需环境"></a>所需环境</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.python.org/downloads/release/python-394/">Python 3.9</a></li>
+<li><a target="_blank" rel="noopener" href="https://deap.readthedocs.io/en/master/">DEAP Library</a></li>
+<li><a target="_blank" rel="noopener" href="https://jupyter.org/">Juypter Notebook</a></li>
+</ul>
+<h2 id="代码-Code"><a href="#代码-Code" class="headerlink" title="代码 Code"></a>代码 Code</h2><h3 id="MLP神经网络-neural-network-controller"><a href="#MLP神经网络-neural-network-controller" class="headerlink" title="MLP神经网络 neural network controller"></a>MLP神经网络 neural network controller</h3><pre><code class="python">import numpy as np
+import math
+
+class MLP(object):
+    def __init__(self, numInput, numHidden1, numHidden2, numOutput):
+        self.fitness = 0
+        self.numInput = numInput + 1 # Add bias node from input to hidden layer␣ 􏰀→1 only
+        self.numHidden1 = numHidden1 # Feel free to adapt the code to add more␣ 􏰀→biases if you wish
+        self.numHidden2 = numHidden2
+        self.numOutput = numOutput
+        self.w_i_h1 = np.random.randn(self.numHidden1, self.numInput)
+        self.w_h1_h2 = np.random.randn(self.numHidden2, self.numHidden1)
+        self.w_h2_o = np.random.randn(self.numOutput, self.numHidden2)
+        self.ReLU = lambda x : max(0,x)
+    def sigmoid(self, x):
+        try:
+            ans = (1 / (1 + math.exp(-x)))
+        except OverflowError:
+            ans = float(&#39;inf&#39;)
+        return ans</code></pre>
+<a id="more"></a>
+
+<pre><code class="python">class MLP(MLP):
+     def feedForward(self, inputs):
+        inputsBias = inputs[:]
+        inputsBias.insert(len(inputs), 1)
+        h1 = np.dot(self.w_i_h1, inputsBias)
+        h1 = [self.ReLU(x) for x in h1]
+        h2 = np.dot(self.w_h1_h2, h1)
+        h2 = [self.ReLU(x) for x in h2]
+        output = np.dot(self.w_h2_o, h2)
+        output = [self.sigmoid(x) for x in output]
+        return output</code></pre>
+<pre><code class="python">class MLP(MLP):
+    def getWeightsLinear(self):
+        flat_w_i_h1 = list(self.w_i_h1.flatten())
+        flat_w_h1_h2 = list(self.w_h1_h2.flatten())
+        flat_w_h2_o = list(self.w_h2_o.flatten())
+        return (flat_w_i_h1 + flat_w_h1_h2 + flat_w_h2_o)
+    def setWeightsLinear(self, Wgenome):
+        numWeights_I_H1 = self.numHidden1 * self.numInput
+        numWeights_H1_H2 = self.numHidden2 * self.numHidden1
+        numWeights_H2_O = self.numOutput * self.numHidden2
+
+        self.w_i_h1 = np.array(Wgenome[:numWeights_I_H1])
+        self.w_i_h1 = self.w_i_h1.reshape((self.numHidden1, self.numInput))
+
+        self.w_h1_h2 = np.array(Wgenome[numWeights_I_H1:(numWeights_H1_H2+numWeights_I_H1)])
+        self.w_h1_h2 = self.w_h1_h2.reshape((self.numHidden2, self.numHidden1))
+
+        self.w_h2_o = np.array(Wgenome[(numWeights_H1_H2 + numWeights_I_H1):])
+        self.w_h2_o = self.w_h2_o.reshape((self.numOutput, self.numHidden2))</code></pre>
+<h3 id="游戏-Game"><a href="#游戏-Game" class="headerlink" title="游戏 Game"></a>游戏 Game</h3><pre><code class="python">import pygame
+</code></pre>
+<pre><code class="python">class FlappyBird:
+    def __init__(self):
+        self.screen = pygame.display.set_mode((400, 708))
+        self.bird = pygame.Rect(65, 50, 50, 50)
+        self.background = pygame.image.load(&quot;assets/background.png&quot;).convert()
+        self.birdSprites = [pygame.image.load(&quot;assets/1.png&quot;).convert_alpha(),
+                            pygame.image.load(&quot;assets/2.png&quot;).convert_alpha(),
+                            pygame.image.load(&quot;assets/dead.png&quot;)]
+        self.wallUp = pygame.image.load(&quot;assets/bottom.png&quot;).convert_alpha()
+        self.wallDown = pygame.image.load(&quot;assets/top.png&quot;).convert_alpha()
+        self.gap = 130
+        self.gravity = 5
+        self.delay = False
+        self.restart()
+
+    def updateWalls(self):
+        self.wallx -= 5
+        self.distanceMoved += 5
+        if self.wallx &lt; -80:
+            self.wallx = 400
+            self.counter += 1
+            self.offset = np.random.randint(-180, 200)
+
+    def birdUpdate(self):
+        if self.jump:
+            self.jumpSpeed -= 1
+            self.birdY -= self.jumpSpeed
+            self.jump -= 1
+        else:
+            self.birdY += self.gravity
+            self.gravity += 0.2
+        self.bird[1] = self.birdY
+        upRect = pygame.Rect(self.wallx,
+                             360 + self.gap - self.offset + 10,
+                             self.wallUp.get_width() - 10,
+                             self.wallUp.get_height())
+        downRect = pygame.Rect(self.wallx,
+                               0 - self.gap - self.offset - 10,
+                               self.wallDown.get_width() - 10,
+                               self.wallDown.get_height())
+
+        if upRect.colliderect(self.bird):
+            self.dead = True
+        if downRect.colliderect(self.bird):
+            self.dead = True
+
+        if not 0 &lt; self.bird[1] &lt; 720:
+            self.dead = True
+
+    def updateScreen(self):
+        font = pygame.font.SysFont(&quot;Arial&quot;, 50)
+        self.screen.fill((255, 255, 255))
+        self.screen.blit(self.background, (0, 0))
+        self.wallUpY = 360 + self.gap - self.offset
+        self.wallDownY = 0 - self.gap - self.offset
+        self.screen.blit(self.wallUp, (self.wallx, self.wallUpY))
+        self.screen.blit(self.wallDown, (self.wallx, self.wallDownY))
+        self.screen.blit(font.render(str(self.counter), -1, (255, 255, 255)),(200, 50))
+        self.screen.blit(self.birdSprites[self.sprite], (70, self.birdY))
+
+    def makeJump(self):
+        self.jump = 17
+        self.gravity = 5
+        self.jumpSpeed = 10
+
+    def restart(self):
+        self.wallx = 400
+        self.wallUpY = 0
+        self.wallDownY = 0
+        self.birdY = 400
+        self.jump = 0 # A timer for the jump
+        self.jumpSpeed = 10
+        self.dead = False
+        self.sprite = 1
+        self.distanceMoved = 0
+        self.counter = 0
+        self.stepsSinceLastJump = 0
+        self.offset = np.random.randint(-180, 300)
+
+    def run(self, network):
+        pygame.font.init()
+
+        while self.dead == False:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if (event.type == pygame.KEYDOWN) and not self.dead:
+                    #self.makeJump()
+                    if self.delay:
+                        self.delay = False
+                    else:
+                        self.delay = True
+
+            if self.delay: time.sleep(0.01)
+
+            # We don&#39;t want it going on forever, so set an upper limit
+            if self.counter == 10:
+                self.dead = True
+
+            self.xdiff = 70 - self.wallx
+            ydiffUp = self.birdY - self.wallUpY
+            ydiffDown = self.birdY - self.wallDownY
+
+            decision = network.feedForward([self.xdiff, ydiffUp, ydiffDown])
+
+            if decision[0] &gt; 0.5 and not self.dead:
+                self.makeJump()
+
+            self.updateScreen()
+            self.updateWalls()
+            self.birdUpdate()
+
+            pygame.display.update()
+
+        return self.distanceMoved</code></pre>
+<h3 id="遗传算法-The-Genetic-Algorithm"><a href="#遗传算法-The-Genetic-Algorithm" class="headerlink" title="遗传算法 The Genetic Algorithm"></a>遗传算法 The Genetic Algorithm</h3><pre><code class="python">from deap import base
+from deap import creator
+from deap import tools
+
+import random
+import time</code></pre>
+<pre><code class="python">numInputNodes = 3
+numHiddenNodes1 = 3
+numHiddenNodes2 = 2
+numOutputNodes = 1
+
+IND_SIZE = ((numInputNodes+1) * numHiddenNodes1) + (numHiddenNodes1 * numHiddenNodes2) + (numHiddenNodes2 * numOutputNodes)</code></pre>
+<p>Create a single neural network controller that we will use. We will evolve weights and pass them to this network when we need to evaluate their fitness.</p>
+<pre><code class="python">myNet = MLP(numInputNodes, numHiddenNodes1, numHiddenNodes2, numOutputNodes)
+</code></pre>
+<pre><code class="python">creator.create(&quot;FitnessMax&quot;, base.Fitness, weights=(1.0,))
+creator.create(&quot;Individual&quot;, list, fitness=creator.FitnessMax)
+
+toolbox = base.Toolbox()
+toolbox.register(&quot;attr_float&quot;, random.uniform, -1.0, 1.0)
+toolbox.register(&quot;individual&quot;, tools.initRepeat, creator.Individual,toolbox.attr_float, n=IND_SIZE)</code></pre>
+<pre><code class="python">def evaluate(indiv, myNet, game):
+    myNet.setWeightsLinear(indiv)   # Load the individual&#39;s weights into the neural network
+    game.restart()
+    fitness = game.run(myNet) # Evaluate the individual by running the game (discuss)
+    return fitness,</code></pre>
+<pre><code class="python">toolbox.register(&quot;evaluate&quot;, evaluate)
+toolbox.register(&quot;select&quot;, tools.selTournament, tournsize=3)
+
+toolbox.register(&quot;mutate&quot;, tools.mutGaussian, mu=0.0, sigma=0.5, indpb=0.1)</code></pre>
+<pre><code class="python">toolbox.register(&quot;population&quot;, tools.initRepeat, list, toolbox.individual)</code></pre>
+<pre><code class="python">stats = tools.Statistics(key=lambda ind: ind.fitness.values)
+stats.register(&quot;avg&quot;, np.mean)
+stats.register(&quot;std&quot;, np.std)
+stats.register(&quot;min&quot;, np.min)
+stats.register(&quot;max&quot;, np.max)</code></pre>
+<pre><code class="python">logbook = tools.Logbook()
+
+pop = toolbox.population(n=100)</code></pre>
+<p>Create a single game object. We will use this single object evaluate each of our solutions.</p>
+<pre><code class="python">game = FlappyBird()</code></pre>
+<pre><code class="python">fitnesses = [toolbox.evaluate(indiv, myNet, game) for indiv in pop]
+for ind, fit in zip(pop, fitnesses):
+    ind.fitness.values = fit</code></pre>
+<pre><code class="python">NGEN = 10
+
+for g in range(NGEN):
+    print(&quot;-- Generation %i --&quot; % g)
+
+    offspring = toolbox.select(pop, len(pop))
+    offspring = list(map(toolbox.clone, offspring))
+
+    for mutant in offspring:
+        toolbox.mutate(mutant)
+        del mutant.fitness.values
+
+    invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
+    fitnesses = [toolbox.evaluate(indiv, myNet, game) for indiv in invalid_ind]
+    for ind, fit in zip(invalid_ind, fitnesses):
+         ind.fitness.values = fit
+
+    pop[:] = offspring
+    record = stats.compile(pop)
+    logbook.record(gen=g, **record)</code></pre>
+<h2 id="检验算法-Examination-of-the-algorithm"><a href="#检验算法-Examination-of-the-algorithm" class="headerlink" title="检验算法 Examination of the algorithm"></a>检验算法 Examination of the algorithm</h2><pre><code class="python">logbook.header = &quot;gen&quot;, &quot;avg&quot;, &quot;evals&quot;, &quot;std&quot;, &quot;min&quot;, &quot;max&quot;</code></pre>
+<pre><code class="python">import matplotlib.pyplot as plt
+%matplotlib inline
+gen = logbook.select(&quot;gen&quot;)
+avgs = logbook.select(&quot;avg&quot;)
+stds = logbook.select(&quot;std&quot;)</code></pre>
+<pre><code class="python">plt.rc(&#39;axes&#39;, labelsize=14)
+plt.rc(&#39;xtick&#39;, labelsize=14)
+plt.rc(&#39;ytick&#39;, labelsize=14) 
+plt.rc(&#39;legend&#39;, fontsize=14)
+
+fig, ax1 = plt.subplots()
+
+line1 = ax1.errorbar(gen, avgs, yerr=stds, errorevery=2)
+ax1.set_xlabel(&quot;Generation&quot;)
+ax1.set_ylabel(&quot;Mean Fitness&quot;)</code></pre>
+<img src="/images/FPresults.jpg">
+
+<h2 id="检验最优解-Examine-the-best-solution"><a href="#检验最优解-Examine-the-best-solution" class="headerlink" title="检验最优解 Examine the best solution"></a>检验最优解 Examine the best solution</h2><pre><code class="python">indiv1 = tools.selBest(pop, 1)[0]
+toolbox.evaluate(indiv1, myNet, game)</code></pre>
+
+        </div>
+
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+<nav class="article-nav">
+  
+    <a href="/Positive%20or%20negative/" id="article-nav-newer" class="article-nav-link-wrap">
+      <div class="article-nav-caption">下一篇</div>
+      <div class="article-nav-title">
+        
+          Positive or negative
+        
+      </div>
+    </a>
+  
+  
+    <a href="/Eat-UoY/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-caption">上一篇</div>
+      <div class="article-nav-title">Eat UoY</div>
+    </a>
+  
+</nav>
+
+
+    <section class="share">
+        <div class="share-title">分享</div>
+        <a class="share-item" target="_blank"
+            href="https://twitter.com/share?text=FlappyBird - Hao Wu's Homepage&url=https://waley.tech/FlappyBird/">
+            <box-icon type='logo' name='twitter'></box-icon>
+        </a>
+        <a class="share-item" target="_blank"
+            href="https://www.facebook.com/sharer.php?title=FlappyBird - Hao Wu's Homepage&u=https://waley.tech/FlappyBird/">
+            <box-icon name='facebook-square' type='logo' ></box-icon>
+        </a>
+        <!-- <a class="share-item" target="_blank"
+            href="https://service.weibo.com/share/share.php?title=FlappyBird - Hao Wu's Homepage&url=https://waley.tech/FlappyBird/&pic=">
+            <div class="n-icon n-icon-weibo"></div>
+        </a> -->
+    </section>
+
+</article>
+
+
+
+
+
+
+
+</div>
+                </section>
+            </section>
+
+             
+            <aside class="sidebar">
+            
+                
+
+
+<div class="widget" id="widget">
+    
+      
+  <div class="widget-wrap">
+    <div class="widget-inner">
+      <div class="toc post-toc-html"></div>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-cate">
+    <div class="widget-title"><span>Categories</span></div>
+    <div class="widget-inner">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Evolutionary-Computation/">Evolutionary Computation</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/IELTS/">IELTS</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode/">LeetCode</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap widget-tags">
+    <div class="widget-title"><span>Tags</span></div>
+    <div class="widget-inner">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithms/" rel="tag">Algorithms</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CC/" rel="tag">CC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GRA/" rel="tag">GRA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guide/" rel="tag">Guide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Research-Proposal/" rel="tag">Research Proposal</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TR/" rel="tag">TR</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Writing-Classifying/" rel="tag">Writing Classifying</a></li></ul>
+    </div>
+  </div>
+
+
+    
+</div>
+
+<div id="backtop"><i class="icon icon-arrow-up"></i></div>
+            </aside>
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-wave">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3c4859" fill-opacity="1" d="M0,160L60,181.3C120,203,240,245,360,240C480,235,600,181,720,186.7C840,192,960,256,1080,261.3C1200,267,1320,213,1380,186.7L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>
+    </div>
+
+    <div class="footer-wrap">
+        <div class="footer-inner"> 
+            Hao Wu&#39;s Homepage &copy; 2022<br>
+            Powered By Hexo · Theme By <a href="https://github.com/lh1me/hexo-theme-aomori" target="_blank">Aomori</a>
+        </div>
+    </div>
+
+</footer>
+
+
+
+
+<script src="/dist/build.js?1.13.0.js"></script>
+
+
+<script src="/dist/custom.js?1.13.0.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
